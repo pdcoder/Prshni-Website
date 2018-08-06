@@ -10,6 +10,7 @@ $err="";
 $err2="";
 if((isset($_POST['submit2'])))
 {
+    
     $id3= $_POST['id'];
 $sql3 = "DELETE FROM productlist WHERE id='$id3'";
 $resul3 = $conn->query($sql3);
@@ -22,12 +23,12 @@ $err2 = "There was an error. Please try again.";
 }
 if((isset($_POST['submit'])))
 {
+$id = $_POST['idrow'];
 $name = $_POST['name'];
 $des = $_POST['des'];
-$id = $_POST['id'];
 $price = $_POST['price'];
 if(!empty($id)){
-if ($_FILES['file']['size'] == 0 )
+if (!file_exists($_FILES['file']['tmp_name']))
 {
     
    $sql6 = "UPDATE productlist SET imgname = '$name', imagdes = '$des', price = '$price' WHERE id = '$id'";
@@ -44,6 +45,7 @@ if ($_FILES['file']['size'] == 0 )
 }
 }
 else{
+
          $target_dir = "../img/";
         $target_file = $target_dir . basename($_FILES["file"]["name"]);
         $uploadOk = 1;
@@ -95,7 +97,6 @@ else{
 
 
 else{
-
     $target_dir = "../img/";
         $target_file = $target_dir . basename($_FILES["file"]["name"]);
         $uploadOk = 1;
@@ -147,43 +148,8 @@ else{
 }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+        <?php include("header.php");?>
     <title>All Products</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="./vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- MetisMenu CSS -->
-    <link href="./vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
-
-    <!-- DataTables CSS -->
-    <link href="./vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
-
-    <!-- DataTables Responsive CSS -->
-    <link href="./vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="./dist/css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="./vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
     <style>
         .error{
@@ -198,58 +164,7 @@ else{
 
     <div id="wrapper">
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                
-                <a class="navbar-brand" href="index.php">Admin</a>
-            </div>
-            <!-- /.navbar-header -->
-
-          
-
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        
-                    <li>
-                            <a href="index.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                        </li>
-                        
-                        <li>
-                            <a href="slider.php"><i class="fa fa-sliders fa-fw"></i> Slider</a>
-                        </li>
-                        <li>
-                            <a href="nslider.php"><i class="fa fa-newspaper-o fa-fw"></i> Notice Slider</a>
-                        </li>
-                       
-                        <li>
-                            <a href="products.php"><i class="fa fa-shopping-cart fa-fw"></i> All Products</a>
-                        </li>
-                         <li>
-                            <a href="featured.php"><i class="fa fa-star fa-fw"></i> Featured Product</a>
-                        </li>
-                        <li>
-                            <a href="stats.php"><i class="fa fa-pie-chart fa-fw"></i> Stats</a>
-                        </li>
-                        <li>
-                            <a href="queries.php"><i class="fa fa-question fa-fw"></i> Queries</a>
-                        </li>
-                        <li>
-                            <a href="edit.php"><i class="fa fa-user-plus fa-fw"></i> Add / Remove Admin</a>
-                        <li>
-                            <a href="logout.php"><i class="fa fa-reply fa-fw"></i> Logout</a>
-                        </li>
-                        
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
-        </nav>
+        <?php include("nav.php");?>
 
         <div id="page-wrapper">
             <div class="row">
@@ -274,7 +189,7 @@ All Products                        </div>
                                         <th>DESCRIPTION</th>
                                         <th>PICTURE</th>
                                         <th>PRICE</th>
-                
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -285,58 +200,31 @@ if ($result->num_rows > 0) {
       
 ?>
                                     <tr class="">
-                                        <td><?php echo $row['id']; ?></td>
-                                        <td><?php echo $row['imgname']; ?></td>
-                                        <td><?php echo $row['imagdes']; ?></td>
-                                        <td><a href="<?php echo $row['img']; ?>" target="_blank"><?php echo $row['img']; ?></a></td>
-                            <td><?php echo $row['price']; ?></td>
-                                    </tr>
-                                    
+                                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
+                                         <td><input type="text" value="<?php echo $row['id'];?>" name="idrow" /></td>
+
+                                        <td><input type="text" value="<?php echo $row['imgname']; ?>" name="name" /></td>
+                                        <td><input type="text" value="<?php echo $row['imagdes']; ?>" name="des"/></td>
+                                        <td><a id="a" href="<?php echo $row['img']; ?>" target="_blank"><?php echo $row['img']; ?></a>&nbsp;<input type="file" id="fl" name="file"  /></td>
+                            <td><input type="text" value="<?php echo $row['price']; ?>" name="price"/></td>
+                            <td><i class="fa fa-trash" style='color:red; cursor:pointer' onClick='deleteProduct(<?php echo $row['id'];?>);'></i> &nbsp; | &nbsp; <?php if($row['featured']==0) echo "<i class='fa fa-star' style='cursor:pointer' onClick='markFeatured(".$row['id'].");'></i>"; else echo "<i class='fa fa-star' style='color:red'></i>"; ?>
+                                    <input type="submit" value="Update" class="btn btn-success" name="submit"></td>
+</tr>
+
+                                    </form>
                                      <?php
     }
 }
 ?>
+
+
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
                             <br><br>
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
-
-                            <div class="form-group">
-                            <input class="form-control" name="id" placeholder="Enter id to update. Leave blank to add product">
-<br>
-                            <input class="form-control" name="price" placeholder="Update Price" required>
-<br>
-                            <input class="form-control" name="name" placeholder="Update name" required>
-                            <br>
-                            <textarea class="form-control" rows="3" placeholder="Update Description"  name="des" required></textarea>
-<br>
-                                            <label>Image input</label>
-                                            <input type="file"  id="file" name="file">
-                                        </div>
-                                        <input type="submit" value="Update/Add" class="btn btn-success" name="submit">
-                                        <span class="error"><?php echo $err; ?></span>
-</form>
-<br>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
-
-<div class="add">
-                            <div class="form-group">
-                            <div class="panel panel-danger">
-                        <div class="panel-heading">
-                            Remove Product
-                        </div>
-                        <div class="panel-body">
-                    <input class="form-control" name="id" placeholder="ID that you want to delete" required>
-                            <br>
-                            <input type="submit" value="Remove" class="btn btn-danger" name="submit2">
-                            <span class="error"><?php echo $err2; ?></span>
-                            </div>
-</div>
-</div>
                             
-</div>
-</form>
+ <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Add</button>
+
                         </div>
                         <!-- /.panel-body -->
                         
@@ -357,7 +245,45 @@ if ($result->num_rows > 0) {
 
     </div>
     <!-- /#wrapper -->
+  
+    
+     
+  
+  <!-- Modal2-->
+   <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Product</h4>
+        </div>
+        <div class="modal-body">
+           <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
 
+                            <div class="form-group">
+<br>
+                            <input class="form-control" name="price" placeholder="Price" required>
+<br>
+                            <input class="form-control" name="name" placeholder="Name" required>
+                            <br>
+                            <textarea class="form-control" rows="3" placeholder="Description"  name="des" required></textarea>
+<br>
+                                            <label>Image input</label>
+                                            <input type="file"  id="file" name="file">
+                                        </div>
+                                        <input type="submit" value="Add" class="btn btn-success" name="submit">
+                                        <span class="error"><?php echo $err; ?></span>
+</form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
     <!-- jQuery -->
     <script src="./vendor/jquery/jquery.min.js"></script>
 
@@ -383,7 +309,49 @@ if ($result->num_rows > 0) {
         });
     });
     </script>
+<script>
+    function markFeatured(id){
+        $.ajax({
+           url:'markFeatured.php',
+           type:'POST',
+           data:'id='+id,
+           success:function mark(n){
+               if(n==1)
+               location.href='products.php';
+               else
+               alert('Oops! Cannot mark featured product.');
+           }
+        });
+    }
+    
+    function deleteProduct(x){
+        $.ajax({
+            url:'deleteProduct.php',
+            type:'POST',
+             data:'id='+x,
+           success:function del(n){
+               if(n==1)
+               location.href='products.php';
+               else
+               alert('Oops! Cannot delete product.');
+           }
+        });
+    }
+  
+    jQuery(function(){
+    jQuery("#pencil").on('click', function(e){
+        e.preventDefault();
+        jQuery("#fl:hidden").trigger('click');
+        if(document.getElementById("fl").files.length > 0) {
+   jQuery("#a").hide();
+                jQuery("i.fa fa-pencil").hide();
 
+        jQuery("#fl").show();
+}
+        
+    });
+});
+</script>
 </body>
 
 </html>
